@@ -24,13 +24,17 @@ def get_external_ip():
         return None
 
 def get_location():
-    ip_address = get_external_ip()
-    response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
-    city = response.get("city")
-    country = response.get("country_name")
-    location_text = f"{city}, {country}"
-    return location_text
-
+    try:
+        ip_address = get_external_ip()
+        response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
+        city = response.get("city")
+        country = response.get("country_name")
+        location_text = f"{city}, {country}"
+        return location_text
+    except Exception as e:
+        print("Exception occurred (CITY/COUNTRY)", e)
+        return None
+        
 def get_hostname():
     try:
         hostname = socket.gethostname()
