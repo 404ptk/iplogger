@@ -15,6 +15,22 @@ def get_ip_address():
         s.close()
     return ip_address
 
+def get_external_ip():
+    try:
+        response = requests.get('https://api64.ipify.org?format=json').json()
+        return response["ip"]
+    except Exception as e:
+        print("Exception occurred (EXTERNAL IP)", e)
+        return None
+
+def get_location():
+    ip_address = get_external_ip()
+    response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
+    city = response.get("city")
+    country = response.get("country_name")
+    location_text = f"{city}, {country}"
+    return location_text
+
 def get_hostname():
     try:
         hostname = socket.gethostname()
@@ -28,20 +44,10 @@ def get_os_info():
     os_version = platform.release()
     return os_name, os_version
 
-def get_country(ip):
-    try:
-        response = requests.get(f"http://ipinfo.io/{ip}/country")
-        country = response.text.strip()
-        return country
-    except Exception as e:
-        print("Exception occurred (COUNTRY NAME):", e)
-        return None
-
 def save_to_file(content):
     try:
         with open("skrypt_log.txt", "a") as file:
             file.write(content + "\n")
-        print("Saved to file.")
     except Exception as e:
         print("Error in saving to file: ", e)
 
@@ -50,9 +56,11 @@ if __name__ == "__main__":
     formatted_time = current_time.strftime("%d-%m-%Y | %H:%M")
 
     ip = get_ip_address()
+    external_ip = get_external_ip()
     hostname = get_hostname()
     os_name, os_version = get_os_info()
-    country = get_country(ip)
+    location = get_location()
+
 
     log_content = "Date: " + formatted_time + "\n"
 
@@ -60,6 +68,16 @@ if __name__ == "__main__":
         log_content += "IP Address: " + ip + "\n"
     else:
         log_content += "IP Address: NONE\n"
+
+    if external_ip:
+        log_content += "External IP: " + external_ip + "\n"
+    else:
+        log_content += "External IP: NONE\n"
+
+    if location:
+        log_content += "Location: " + location + "\n"
+    else:
+        log_content += "Location: NONE\n"
 
     if hostname:
         log_content += "PC Hostname: " + hostname + "\n"
@@ -71,11 +89,6 @@ if __name__ == "__main__":
     else:
         log_content += "OS: NONE\n"
 
-    if country:
-        log_content += "Country: NONE\n"
-        # log_content += "Country: " + country + "\n"
-    else:
-        log_content += "Country: NONE\n"
 
     print(log_content)
     save_to_file(log_content)
